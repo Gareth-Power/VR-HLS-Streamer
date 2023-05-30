@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script>
+      function startVideo() {
+        const videosphere = document.querySelector('#videosphere');
+        const video = document.querySelector("#myvideo");
+        videosphere.setAttribute('src', '#myvideo');
+        video.play();
+        document.removeEventListener("click", startVideo);
+      }
+      document.addEventListener("click", startVideo);
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <video id="myvideo" src="https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8
+        " autoplay loop="true" crossorigin="anonymous"></video>
+      </a-assets>
+
+      <a-videosphere id="videosphere" rotation="0 180 0" stereo-mode="over-under"></a-videosphere>
+
+      <a-camera>
+        <a-cursor></a-cursor>
+      </a-camera>
+    </a-scene>
+  </body>
+</html>
