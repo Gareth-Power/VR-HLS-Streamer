@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="https://vjs.zencdn.net/7.15.4/video-js.min.css" rel="stylesheet">
-    <script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
-    <script>
-      function startVideo() {
-        const videosphere = document.querySelector('#videosphere');
-        const video = document.querySelector("#myvideo");
-        videosphere.setAttribute('src', '#myvideo');
-        videojs(video).play(); // Initialize Video.js and play the video
-        document.removeEventListener("click", startVideo);
-      }
-      document.addEventListener("click", startVideo);
-    </script>
-    <style>
-      .video-js {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   </head>
   <body>
     <a-scene>
       <a-assets>
-        <video id="myvideo" class="video-js vjs-default-skin" autoplay loop="true" crossorigin="anonymous">
-          <source src="https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8" type="application/x-mpegURL">
-        </video>
+        <video id="myvideo" crossorigin="anonymous" playsinline webkit-playsinline></video>
       </a-assets>
 
-      <a-videosphere id="videosphere" rotation="0 180 0" stereo-mode="over-under"></a-videosphere>
+      <a-videosphere src="#myvideo" rotation="0 180 0" stereo-mode="over-under"></a-videosphere>
 
       <a-camera>
         <a-cursor></a-cursor>
       </a-camera>
     </a-scene>
+
+    <script>
+      var videoElement = document.getElementById('myvideo');
+
+      if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource('https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8');
+        hls.attachMedia(videoElement);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          videoElement.play();
+        });
+      } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        videoElement.src = 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+        videoElement.addEventListener('loadedmetadata', function() {
+          videoElement.play();
+        });
+      }
+    </script>
   </body>
 </html>
