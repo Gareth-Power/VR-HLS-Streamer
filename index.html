@@ -5,7 +5,7 @@
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   </head>
   <body>
-    <a-scene>
+    <a-scene onclick="startVideo()">
       <a-assets>
         <video id="myvideo" crossorigin="anonymous" playsinline webkit-playsinline></video>
       </a-assets>
@@ -19,19 +19,26 @@
 
     <script>
       var videoElement = document.getElementById('myvideo');
+      var videoStarted = false;
 
-      if (Hls.isSupported()) {
-        var hls = new Hls();
-        hls.loadSource('https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8');
-        hls.attachMedia(videoElement);
-        hls.on(Hls.Events.MANIFEST_PARSED, function() {
-          videoElement.play();
-        });
-      } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-        videoElement.src = 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
-        videoElement.addEventListener('loadedmetadata', function() {
-          videoElement.play();
-        });
+      function startVideo() {
+        if (!videoStarted) {
+          videoStarted = true;
+
+          if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource('https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8');
+            hls.attachMedia(videoElement);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+              videoElement.play();
+            });
+          } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            videoElement.src = 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8';
+            videoElement.addEventListener('loadedmetadata', function() {
+              videoElement.play();
+            });
+          }
+        }
       }
     </script>
   </body>
